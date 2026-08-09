@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">BrightSmile Dental</string>
+    <string name="title_activity_main">BrightSmile Dental</string>
+    <string name="package_name">com.healthanalyst.app</string>
+    <string name="custom_url_scheme">com.healthanalyst.app</string>
+</resources>
