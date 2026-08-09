@@ -1,4 +1,4 @@
-# Dental Booking — Backend API
+# Healthalyst — Backend API
 
 Node.js + TypeScript + Express backend for the dental appointment booking
 app. Role-based access control (patient vs. clinic staff) is enforced in
@@ -26,7 +26,7 @@ Demo accounts (all use password `password123`):
 | Email                       | Role    | Clinic                     |
 |------------------------------|---------|-----------------------------|
 | `patient@test.test`          | PATIENT | —                            |
-| `staff@brightsmile.test`     | STAFF   | BrightSmile Dental Clinic   |
+| `staff@healthalyst.test`     | STAFF   | Healthalyst Dental Clinic   |
 | `staff@familycare.test`      | STAFF   | Family Care Dental          |
 
 ## How role-based access is enforced
@@ -46,7 +46,7 @@ Demo accounts (all use password `password123`):
   payload.
 
 This was verified end-to-end: a booking created by the patient at
-BrightSmile shows up immediately for `staff@brightsmile.test` and is
+Healthalyst shows up immediately for `staff@healthalyst.test` and is
 completely invisible (404, empty list) to `staff@familycare.test`.
 
 ## API

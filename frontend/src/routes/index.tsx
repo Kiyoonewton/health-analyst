@@ -16,13 +16,13 @@ import { api, type Role } from "@/lib/api";
 export const Route = createFileRoute("/")({
     head: () => ({
         meta: [
-            { title: "BrightSmile Dental — Book Your Appointment Online" },
+            { title: "Healthalyst — Book Your Appointment Online" },
             {
                 name: "description",
                 content:
                     "Book dental appointments in seconds. Patients choose a clinic, service and time slot; clinic staff manage every request from one front-desk dashboard.",
             },
-            { property: "og:title", content: "BrightSmile Dental — Book Your Appointment Online" },
+            { property: "og:title", content: "Healthalyst — Book Your Appointment Online" },
             {
                 property: "og:description",
                 content:
@@ -82,7 +82,7 @@ function Landing() {
                         <Card className="shadow-lift border-border/60">
                             <CardHeader>
                                 <CardTitle className="text-xl">Welcome back</CardTitle>
-                                <CardDescription>Choose how you use BrightSmile.</CardDescription>
+                                <CardDescription>Choose how you use Healthalyst.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <Tabs value={role} onValueChange={(v) => setRole(v as Role)}>
@@ -103,7 +103,7 @@ function Landing() {
                 </section>
             </main>
             <footer className="border-t border-border/70 py-8 text-center text-sm text-muted-foreground">
-                BrightSmile Dental · Appointments handled with care
+                Healthalyst · Appointments handled with care
             </footer>
         </div>
     );
@@ -278,7 +278,7 @@ function AuthForms({
                                     id="clinic-name"
                                     value={clinicName}
                                     onChange={(e) => setClinicName(e.target.value)}
-                                    placeholder="BrightSmile Lekki"
+                                    placeholder="Healthalyst Lekki"
                                 />
                             </div>
                             <div className="space-y-2">

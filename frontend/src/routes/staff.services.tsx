@@ -16,13 +16,13 @@ import { api, type Clinic } from "@/lib/api";
 export const Route = createFileRoute("/staff/services")({
   head: () => ({
     meta: [
-      { title: "Clinic Services — BrightSmile Staff" },
+      { title: "Clinic Services — Healthalyst Staff" },
       {
         name: "description",
         content:
           "Manage the treatments patients can book at your clinic, including appointment duration for each service.",
       },
-      { property: "og:title", content: "Clinic Services — BrightSmile Staff" },
+      { property: "og:title", content: "Clinic Services — Healthalyst Staff" },
       {
         property: "og:description",
         content: "Add and review bookable treatments and durations for your dental clinic.",

@@ -35,7 +35,7 @@ const Clinic = {
   type: "object",
   properties: {
     id: { type: "string", format: "uuid" },
-    name: { type: "string", example: "BrightSmile Dental Clinic" },
+    name: { type: "string", example: "Healthalyst Dental Clinic" },
     address: { type: "string", example: "123 Main St, Toronto, ON" },
     services: { type: "array", items: Service },
   },
@@ -81,7 +81,7 @@ const Booking = {
 export const openApiSpec = {
   openapi: "3.0.0",
   info: {
-    title: "Dental Booking API",
+    title: "Healthalyst API",
     version: "1.0.0",
     description:
       "Role-based dental appointment booking API for patients and clinic staff. Auth is cookie-based (JWT in an httpOnly cookie) — log in via /api/auth/login and the cookie is sent automatically on subsequent requests.",

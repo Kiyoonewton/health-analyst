@@ -1,5 +1,5 @@
 {
-  "name": "dental-booking-backend",
+  "name": "healthalyst-backend",
   "version": "1.0.0",
   "description": "Role-based dental appointment booking API (patient + clinic staff)",
   "main": "dist/index.js",

@@ -80,13 +80,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         meta: [
             { charSet: "utf-8" },
             { name: "viewport", content: "width=device-width, initial-scale=1" },
-            { title: "BrightSmile Dental — Online Appointment Booking" },
+            { title: "Healthalyst — Online Appointment Booking" },
             {
                 name: "description",
                 content:
                     "Book dental appointments online. Patients request a clinic, service and time slot; clinic staff confirm from a live front-desk dashboard.",
             },
-            { property: "og:title", content: "BrightSmile Dental — Online Appointment Booking" },
+            { property: "og:title", content: "Healthalyst — Online Appointment Booking" },
             {
                 property: "og:description",
                 content: "Patient and clinic-staff logins with instant, mobile-friendly appointment booking.",

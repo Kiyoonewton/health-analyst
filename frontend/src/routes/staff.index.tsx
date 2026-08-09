@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/staff/")({
   head: () => ({
     meta: [
-      { title: "Front Desk — Clinic Appointment Dashboard | BrightSmile" },
+      { title: "Front Desk — Clinic Appointment Dashboard | Healthalyst" },
       {
         name: "description",
         content:

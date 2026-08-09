@@ -18,13 +18,13 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/book")({
   head: () => ({
     meta: [
-      { title: "Book a Dental Visit — BrightSmile" },
+      { title: "Book a Dental Visit — Healthalyst" },
       {
         name: "description",
         content:
           "Pick your clinic, choose a treatment and request a time slot. Your dentist's front desk confirms in minutes.",
       },
-      { property: "og:title", content: "Book a Dental Visit — BrightSmile" },
+      { property: "og:title", content: "Book a Dental Visit — Healthalyst" },
       {
         property: "og:description",
         content: "Choose a clinic, a service and a time slot from your phone in under a minute.",

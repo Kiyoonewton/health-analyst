@@ -44,7 +44,7 @@ export function AppHeader() {
                     <span className="bg-brand flex size-9 items-center justify-center rounded-xl text-primary-foreground">
                         <Stethoscope className="size-5" />
                     </span>
-                    <span className="font-display text-lg font-semibold tracking-tight">BrightSmile</span>
+                    <span className="font-display text-lg font-semibold tracking-tight">Healthalyst</span>
                 </Link>
 
                 <nav className="ml-6 hidden items-center gap-1 md:flex">

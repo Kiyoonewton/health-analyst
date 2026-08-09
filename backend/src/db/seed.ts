@@ -15,15 +15,15 @@ async function main() {
      VALUES (?, ?, ?, ?, ?, ?, ?)`
   );
 
-  const brightSmileId = randomUUID();
-  insertClinic.run(brightSmileId, "BrightSmile Dental Clinic", "12 Adeola Odeku St, Victoria Island, Lagos");
+  const healthalystId = randomUUID();
+  insertClinic.run(healthalystId, "Healthalyst Dental Clinic", "12 Adeola Odeku St, Victoria Island, Lagos");
   for (const [name, mins] of [
     ["Check-up & Cleaning", 30],
     ["Tooth Extraction", 45],
     ["Teeth Whitening", 60],
     ["Root Canal", 90],
   ] as const) {
-    insertService.run(randomUUID(), brightSmileId, name, mins);
+    insertService.run(randomUUID(), healthalystId, name, mins);
   }
 
   const familyCareId = randomUUID();
@@ -36,13 +36,13 @@ async function main() {
     insertService.run(randomUUID(), familyCareId, name, mins);
   }
 
-  insertUser.run(randomUUID(), "Dr. Amaka Obi", "staff@brightsmile.test", null, passwordHash, "STAFF", brightSmileId);
+  insertUser.run(randomUUID(), "Dr. Amaka Obi", "staff@healthalyst.test", null, passwordHash, "STAFF", healthalystId);
   insertUser.run(randomUUID(), "Dr. Femi Balogun", "staff@familycare.test", null, passwordHash, "STAFF", familyCareId);
   insertUser.run(randomUUID(), "Isaac Patient", "patient@test.test", "+2348012345678", passwordHash, "PATIENT", null);
 
   console.log("Seeded 2 clinics, 2 staff accounts, 1 patient account.");
   console.log("Login with password123 for all seeded accounts:");
-  console.log("  staff@brightsmile.test  (BrightSmile Dental Clinic staff)");
+  console.log("  staff@healthalyst.test  (Healthalyst Dental Clinic staff)");
   console.log("  staff@familycare.test   (Family Care Dental staff)");
   console.log("  patient@test.test       (patient)");
 }

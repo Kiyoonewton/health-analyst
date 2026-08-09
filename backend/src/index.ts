@@ -28,7 +28,7 @@ app.use("/api/clinics", clinicRoutes);
 app.use("/api/bookings", bookingRoutes);
 
 // API docs — GET /api/docs (Swagger UI), GET /api/docs.json (raw OpenAPI spec)
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(openApiSpec, { customSiteTitle: "Dental Booking API" }));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(openApiSpec, { customSiteTitle: "Healthalyst API" }));
 app.get("/api/docs.json", (_req, res) => res.json(openApiSpec));
 
 // 404

@@ -12,13 +12,13 @@ import { api, type Booking } from "@/lib/api";
 export const Route = createFileRoute("/appointments")({
     head: () => ({
         meta: [
-            { title: "My Dental Appointments — BrightSmile" },
+            { title: "My Dental Appointments — Healthalyst" },
             {
                 name: "description",
                 content:
                     "See the status of every appointment you've requested, with clinic, treatment and time slot details, and cancel in one tap.",
             },
-            { property: "og:title", content: "My Dental Appointments — BrightSmile" },
+            { property: "og:title", content: "My Dental Appointments — Healthalyst" },
             {
                 property: "og:description",
                 content: "Track and cancel your dental appointment requests from any device.",
