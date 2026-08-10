@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: healthanalyst-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The runner's workspace is /root/kiyoo/health-analyst/_work, so this
+      # checkout lands at .../_work/health-analyst/health-analyst — but
+      # docker-compose.yml (in /root/kiyoo) builds from ./health-analyst
+      # directly, so sync the checked-out tree over the live app directory.
+      - name: Sync checkout into live app directory
+        run: |
+          rsync -a --delete \
+            --exclude=_work \
+            --exclude=.git \
+            --exclude=backend/.env \
+            --exclude=backend/dev.db \
+            "$GITHUB_WORKSPACE"/ /root/kiyoo/health-analyst/
+
+      - name: Build images
+        working-directory: /root/kiyoo
+        run: docker compose build healthanalyst-client healthanalyst-api
+
+      - name: Deploy
+        working-directory: /root/kiyoo
+        run: docker compose up -d healthanalyst-client healthanalyst-api
+
+      - name: Wait for health
+        working-directory: /root/kiyoo
+        run: |
+          for i in $(seq 1 30); do
+            api_status=$(docker inspect -f '{{.State.Health.Status}}' healthanalyst-api 2>/dev/null || echo "missing")
+            client_status=$(docker inspect -f '{{.State.Health.Status}}' healthanalyst-client 2>/dev/null || echo "missing")
+            echo "api=$api_status client=$client_status"
+            if [ "$api_status" = "healthy" ] && [ "$client_status" = "healthy" ]; then
+              exit 0
+            fi
+            if [ "$api_status" = "unhealthy" ] || [ "$client_status" = "unhealthy" ]; then
+              echo "A service reported unhealthy, checking logs before failing:"
+              docker logs healthanalyst-api --tail 50
+              docker logs healthanalyst-client --tail 50
+              exit 1
+            fi
+            sleep 5
+          done
+          echo "Timed out waiting for healthy status"
+          docker logs healthanalyst-api --tail 50
+          docker logs healthanalyst-client --tail 50
+          exit 1
+
+      - name: Clean up dangling images
+        if: always()
+        run: docker image prune -f

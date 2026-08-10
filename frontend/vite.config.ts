@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Override the default Cloudflare Workers target: this app is deployed as a
+  // plain Node server in a Docker container, not to Cloudflare Workers.
+  nitro: {
+    preset: "node-server",
+  },
 });
