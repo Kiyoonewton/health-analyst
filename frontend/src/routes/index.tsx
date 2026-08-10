@@ -4,6 +4,7 @@ import { CalendarCheck, HeartPulse, ShieldCheck, Smartphone, Sparkles } from "lu
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { AndroidAppAlert } from "@/components/AndroidAppAlert";
 import { AppHeader } from "@/components/AppHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -51,6 +52,9 @@ function Landing() {
         <div className="min-h-screen">
             <AppHeader />
             <main>
+                <div className="mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6">
+                    <AndroidAppAlert />
+                </div>
                 <section className="bg-hero">
                     <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-20">
                         <div>

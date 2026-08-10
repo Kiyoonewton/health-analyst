@@ -5,6 +5,7 @@ import { CalendarDays, Loader2, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { AndroidAppAlert } from "@/components/AndroidAppAlert";
 import { AppHeader } from "@/components/AppHeader";
 import { BookingCard } from "@/components/BookingCard";
 import { RequireRole } from "@/components/RequireRole";
@@ -80,7 +81,8 @@ function StaffDashboard() {
     <div className="min-h-screen">
       <AppHeader />
       <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <AndroidAppAlert />
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-3xl font-semibold sm:text-4xl">Front desk</h1>
             <p className="mt-2 text-muted-foreground">
