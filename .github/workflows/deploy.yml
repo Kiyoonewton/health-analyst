@@ -106,3 +106,84 @@ jobs:
       - name: Clean up dangling images
         if: always()
         run: docker image prune -f
+
+  android:
+    needs: deploy
+    runs-on: self-hosted
+    timeout-minutes: 20
+    env:
+      ANDROID_HOME: /opt/android-sdk
+      JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Same rsync-into-place approach as the main deploy job — the runner's
+      # checkout lands in _work, but the Android project (and its already
+      # -synced native folder) lives at the live app path.
+      - name: Sync checkout into live app directory
+        run: |
+          rsync -a --delete \
+            --exclude=_work \
+            --exclude=.git \
+            --exclude=backend/.env \
+            --exclude=backend/dev.db \
+            "$GITHUB_WORKSPACE"/ /root/kiyoo/health-analyst/
+
+      # bun isn't installed on the host — build the static mobile bundle
+      # inside a throwaway container instead, writing straight into the
+      # bind-mounted project directory.
+      - name: Build mobile web bundle
+        working-directory: /root/kiyoo/health-analyst/frontend
+        run: |
+          docker run --rm -v "$(pwd)":/app -w /app oven/bun:1-alpine sh -c "
+            bun install --frozen-lockfile &&
+            bun run build:mobile
+          "
+
+      - name: Sync into native Android project
+        working-directory: /root/kiyoo/health-analyst/frontend
+        run: |
+          docker run --rm -v "$(pwd)":/app -w /app oven/bun:1-alpine sh -c "bunx cap sync android"
+
+      # Memory is shared with the live Docker stack on this host — no
+      # daemon (it lingers after exit) and gradle.properties already caps
+      # the heap at 1536m.
+      - name: Build unsigned release APK
+        working-directory: /root/kiyoo/health-analyst/frontend/android
+        run: |
+          export PATH="$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH"
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Sign APK
+        working-directory: /root/kiyoo/health-analyst/frontend/android
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > /tmp/release.keystore
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/36.0.0"
+          APK_DIR=app/build/outputs/apk/release
+          "$BUILD_TOOLS/apksigner" sign \
+            --ks /tmp/release.keystore \
+            --ks-pass "pass:$KEYSTORE_PASSWORD" \
+            --key-pass "pass:$KEY_PASSWORD" \
+            --ks-key-alias "$KEY_ALIAS" \
+            --out "$APK_DIR/healthanalyst-signed.apk" \
+            "$APK_DIR/app-release-unsigned.apk"
+          "$BUILD_TOOLS/apksigner" verify "$APK_DIR/healthanalyst-signed.apk"
+          rm -f /tmp/release.keystore
+
+      - name: Publish APK for download
+        working-directory: /root/kiyoo/health-analyst/frontend/android
+        run: |
+          mkdir -p /root/kiyoo/webserver/downloads
+          cp app/build/outputs/apk/release/healthanalyst-signed.apk \
+            /root/kiyoo/webserver/downloads/healthanalyst.apk
+
+      - name: Smoke test the download
+        run: |
+          code=$(curl -sk -o /dev/null -w '%{http_code}' -H "Host: healthanalyst.kiyoo.online" https://localhost/downloads/healthanalyst.apk)
+          echo "download returned HTTP $code"
+          [ "$code" = "200" ]
