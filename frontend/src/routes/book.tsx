@@ -106,7 +106,7 @@ function BookPage() {
                 No clinics available yet. Check back shortly.
               </p>
             ) : (
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
                 {clinics.map((c) => (
                   <button
                     key={c.id}
@@ -120,8 +120,8 @@ function BookPage() {
                       clinicId === c.id && "border-primary bg-accent/40 ring-2 ring-primary/30",
                     )}
                   >
-                    <p className="font-medium">{c.name}</p>
-                    <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+                    <p className="truncate font-medium">{c.name}</p>
+                    <p className="mt-1 flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
                       <MapPin className="size-3.5 shrink-0" />
                       <span className="truncate">{c.address}</span>
                     </p>
@@ -139,7 +139,7 @@ function BookPage() {
                 This clinic hasn't published services yet.
               </p>
             ) : (
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
                 {services.map((s) => (
                   <button
                     key={s.id}
@@ -211,17 +211,22 @@ function BookPage() {
       </main>
 
       <div className="sticky bottom-0 border-t border-border/70 bg-background/95 p-4 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-3xl items-center gap-4">
+        <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center gap-3">
           <div className="min-w-0 flex-1 text-sm text-muted-foreground">
             {clinic && serviceId && time ? (
-              <span className="truncate">
+              <span className="line-clamp-2 sm:truncate">
                 {services.find((s) => s.id === serviceId)?.name} · {clinic.name} · {date} {time}
               </span>
             ) : (
               "Complete the steps to request your appointment"
             )}
           </div>
-          <Button size="lg" disabled={!canSubmit} onClick={() => createBooking.mutate()}>
+          <Button
+            size="lg"
+            disabled={!canSubmit}
+            onClick={() => createBooking.mutate()}
+            className="w-full sm:w-auto"
+          >
             {createBooking.isPending ? "Requesting…" : "Request appointment"}
           </Button>
         </div>
