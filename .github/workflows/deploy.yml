@@ -30,6 +30,15 @@ jobs:
             --exclude=backend/dev.db \
             "$GITHUB_WORKSPACE"/ /root/kiyoo/health-analyst/
 
+      # Tag the currently-running images as :previous before building new
+      # ones, so a failed deploy has something concrete to roll back to.
+      # Safe if this is the very first deploy ever (no :latest yet).
+      - name: Tag current images as rollback target
+        working-directory: /root/kiyoo
+        run: |
+          docker tag healthanalyst-api:latest healthanalyst-api:previous 2>/dev/null || true
+          docker tag healthanalyst-client:latest healthanalyst-client:previous 2>/dev/null || true
+
       - name: Build images
         working-directory: /root/kiyoo
         run: docker compose build healthanalyst-client healthanalyst-api
@@ -39,6 +48,7 @@ jobs:
         run: docker compose up -d healthanalyst-client healthanalyst-api
 
       - name: Wait for health
+        id: health
         working-directory: /root/kiyoo
         run: |
           for i in $(seq 1 30); do
@@ -59,6 +69,38 @@ jobs:
           echo "Timed out waiting for healthy status"
           docker logs healthanalyst-api --tail 50
           docker logs healthanalyst-client --tail 50
+          exit 1
+
+      # nginx caches upstream container IPs and won't notice a recreated
+      # container on its own — reload after every deploy so it re-resolves,
+      # and gate on `nginx -t` so a config problem elsewhere on this shared
+      # host is caught here instead of silently blocking the reload.
+      - name: Reload nginx
+        if: steps.health.outcome == 'success'
+        run: |
+          docker exec nginx-proxy nginx -t
+          docker exec nginx-proxy nginx -s reload
+
+      # Docker's healthcheck can pass while nginx still 502s (wrong upstream
+      # IP, broken routing) — prove the deploy actually works end-to-end.
+      - name: Smoke test through nginx
+        id: smoke
+        if: steps.health.outcome == 'success'
+        run: |
+          sleep 2
+          code=$(curl -sk -o /dev/null -w '%{http_code}' -H "Host: healthanalyst.kiyoo.online" https://localhost/)
+          echo "homepage returned HTTP $code"
+          [ "$code" = "200" ]
+
+      - name: Roll back on failure
+        if: failure()
+        working-directory: /root/kiyoo
+        run: |
+          echo "Deploy failed health check or smoke test — rolling back to :previous"
+          docker tag healthanalyst-api:previous healthanalyst-api:latest 2>/dev/null || true
+          docker tag healthanalyst-client:previous healthanalyst-client:latest 2>/dev/null || true
+          docker compose up -d healthanalyst-client healthanalyst-api
+          docker exec nginx-proxy nginx -t && docker exec nginx-proxy nginx -s reload
           exit 1
 
       - name: Clean up dangling images
