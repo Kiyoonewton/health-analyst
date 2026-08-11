@@ -32,18 +32,19 @@ export function BookingCard({
 
                 <div className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
                     {showPatient && booking.patient ? (
-                        <p className="flex items-center gap-1.5">
-                            <UserIcon className="size-4 shrink-0" />
-                            <span className="text-foreground">{booking.patient.name}</span>
-                            <span className="truncate">
-                                · {booking.patient.phone ?? booking.patient.email}
+                        <p className="flex min-w-0 items-start gap-1.5">
+                            <UserIcon className="mt-0.5 size-4 shrink-0" />
+                            <span className="break-words">
+                                <span className="text-foreground">{booking.patient.name}</span>
+                                {" · "}
+                                {booking.patient.phone ?? booking.patient.email}
                             </span>
                         </p>
                     ) : null}
                     {booking.clinic ? (
-                        <p className="flex items-center gap-1.5">
-                            <MapPin className="size-4 shrink-0" />
-                            <span className="truncate">
+                        <p className="flex min-w-0 items-start gap-1.5">
+                            <MapPin className="mt-0.5 size-4 shrink-0" />
+                            <span className="break-words">
                                 {booking.clinic.name}
                                 {booking.clinic.address ? ` · ${booking.clinic.address}` : ""}
                             </span>
