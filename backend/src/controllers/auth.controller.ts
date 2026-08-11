@@ -37,7 +37,8 @@ export async function registerPatient(req: Request, res: Response) {
   if (!parsed.success) {
     return res.status(400).json({ error: parsed.error.issues[0].message });
   }
-  const { name, email, phone, password } = parsed.data;
+  const { name, phone, password } = parsed.data;
+  const email = parsed.data.email.trim().toLowerCase();
 
   if (findUserByEmail.get(email)) {
     return res.status(409).json({ error: "An account with that email already exists." });
@@ -58,7 +59,8 @@ export async function registerStaff(req: Request, res: Response) {
   if (!parsed.success) {
     return res.status(400).json({ error: parsed.error.issues[0].message });
   }
-  const { name, email, password, clinicId, clinicName, clinicAddress } = parsed.data;
+  const { name, password, clinicId, clinicName, clinicAddress } = parsed.data;
+  const email = parsed.data.email.trim().toLowerCase();
 
   if (findUserByEmail.get(email)) {
     return res.status(409).json({ error: "An account with that email already exists." });
@@ -99,7 +101,8 @@ export async function login(req: Request, res: Response) {
   if (!parsed.success) {
     return res.status(400).json({ error: parsed.error.issues[0].message });
   }
-  const { email, password } = parsed.data;
+  const { password } = parsed.data;
+  const email = parsed.data.email.trim().toLowerCase();
 
   const user = findUserByEmail.get(email) as UserRow | undefined;
   if (!user) {
