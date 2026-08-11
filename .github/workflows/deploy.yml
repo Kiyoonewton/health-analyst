@@ -132,11 +132,16 @@ jobs:
 
       # bun isn't installed on the host — build the static mobile bundle
       # inside a throwaway container instead, writing straight into the
-      # bind-mounted project directory.
+      # bind-mounted project directory. VITE_API_BASE must be set explicitly
+      # here (unlike the web Docker build, this doesn't inherit it from
+      # docker-compose.yml) or the app falls back to localhost:4000, which
+      # doesn't exist on a user's phone — every API call would fail.
       - name: Build mobile web bundle
         working-directory: /root/kiyoo/health-analyst/frontend
         run: |
-          docker run --rm -v "$(pwd)":/app -w /app oven/bun:1-alpine sh -c "
+          docker run --rm -v "$(pwd)":/app -w /app \
+            -e VITE_API_BASE=https://healthanalyst.kiyoo.online \
+            oven/bun:1-alpine sh -c "
             bun install --frozen-lockfile &&
             bun run build:mobile
           "

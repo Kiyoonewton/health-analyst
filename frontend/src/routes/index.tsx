@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { api, type Role } from "@/lib/api";
@@ -220,9 +221,8 @@ function AuthForms({
 
             <div className="space-y-2">
                 <Label htmlFor={`${role}-password`}>Password</Label>
-                <Input
+                <PasswordInput
                     id={`${role}-password`}
-                    type="password"
                     autoComplete={isRegister ? "new-password" : "current-password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
