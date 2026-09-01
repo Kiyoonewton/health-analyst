@@ -1,3 +1,4 @@
+import { Browser } from "@capacitor/browser";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { CalendarCheck, LogOut, Menu, Stethoscope } from "lucide-react";
 import { useState } from "react";
@@ -7,6 +8,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/hooks/useAuth";
 import { initials } from "@/lib/format";
 import { cn } from "@/lib/utils";
+
+const NAMY_URL = "https://www.namyapp.com/explore";
 
 interface NavItem {
     to: string;
@@ -37,6 +40,11 @@ export function AppHeader() {
         navigate({ to: "/", replace: true });
     }
 
+    async function openNamy() {
+        setOpen(false);
+        await Browser.open({ url: NAMY_URL });
+    }
+
     return (
         <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur">
             <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
@@ -60,6 +68,13 @@ export function AppHeader() {
                             {item.label}
                         </Link>
                     ))}
+                    <button
+                        type="button"
+                        onClick={openNamy}
+                        className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                    >
+                        Explore on Namy
+                    </button>
                 </nav>
 
                 <div className="ml-auto flex items-center gap-2">
@@ -106,6 +121,13 @@ export function AppHeader() {
                                                 {item.label}
                                             </Link>
                                         ))}
+                                        <button
+                                            type="button"
+                                            onClick={openNamy}
+                                            className="rounded-lg px-3 py-3 text-left text-base font-medium hover:bg-secondary"
+                                        >
+                                            Explore on Namy
+                                        </button>
                                         <Button variant="outline" className="mt-4" onClick={handleSignOut}>
                                             <LogOut className="mr-2 size-4" /> Sign out
                                         </Button>
