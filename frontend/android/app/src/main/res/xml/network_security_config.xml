@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dev-only: allows plain HTTP to the Android emulator's host-loopback
+     alias so the app can reach a backend running on the dev machine at
+     http://10.0.2.2:PORT. Cleartext stays blocked everywhere else. -->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>

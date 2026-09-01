@@ -1,4 +1,4 @@
-import { Browser } from "@capacitor/browser";
+import { InAppBrowser, ToolBarType } from "@capgo/capacitor-inappbrowser";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { CalendarCheck, LogOut, Menu, Stethoscope } from "lucide-react";
 import { useState } from "react";
@@ -42,7 +42,12 @@ export function AppHeader() {
 
     async function openNamy() {
         setOpen(false);
-        await Browser.open({ url: NAMY_URL });
+        // Native embedded WebView (no browser chrome — close button only),
+        // not an OS browser surface: stays inside the app, not Chrome/Safari.
+        await InAppBrowser.openWebView({
+            url: NAMY_URL,
+            toolbarType: ToolBarType.COMPACT,
+        });
     }
 
     return (
